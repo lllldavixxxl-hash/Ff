@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Fire • Painel Gamer</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, #202b45, #090b12 65%);
+  color: #fff;
+  padding: 20px;
+}
+
+.container {
+  max-width: 430px;
+  margin: auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 28px;
+  color: #ffcc00;
+  text-shadow: 0 0 15px rgba(255,204,0,.5);
+}
+
+.header p {
+  color: #aaa;
+  margin-top: 5px;
+}
+
+.card {
+  background: rgba(20,24,35,.95);
+  border: 1px solid #30384d;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+
+.card h2 {
+  font-size: 18px;
+  margin-bottom: 14px;
+  color: #ffcc00;
+}
+
+button {
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 9px;
+  color: #fff;
+  background: #242c3d;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s;
+}
+
+button:active {
+  transform: scale(.97);
+}
+
+.primary {
+  background: linear-gradient(135deg,#ffb700,#ff6a00);
+  color: #111;
+}
+
+.success {
+  background: linear-gradient(135deg,#00c853,#009624);
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: #ffb700;
+}
+
+.range-row {
+  margin: 13px 0;
+}
+
+.range-title {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 7px;
+  color: #ddd;
+}
+
+.value {
+  color: #ffcc00;
+  font-weight: bold;
+}
+
+.result {
+  text-align: center;
+  font-size: 28px;
+  color: #00e676;
+  font-weight: bold;
+  margin: 12px 0;
+}
+
+.status {
+  text-align: center;
+  color: #aaa;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.footer {
+  text-align: center;
+  color: #666;
+  font-size: 12px;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>🔥 FREE FIRE</h1>
+    <p>Painel Gamer Mobile</p>
+  </div>
+
+  <!-- ABRIR JOGO -->
+  <div class="card">
+    <h2>🎮 Jogo</h2>
+
+    <button class="primary" onclick="abrirFreeFire()">
+      ABRIR FREE FIRE
+    </button>
+
+    <div id="status" class="status">
+      Pronto para iniciar
+    </div>
+  </div>
+
+  <!-- PRESETS -->
+  <div class="card">
+    <h2>⚙️ Presets de Sensibilidade</h2>
+
+    <button onclick="preset('equilibrado')">
+      🎯 Equilibrado
+    </button>
+
+    <button onclick="preset('precisao')">
+      🔥 Precisão
+    </button>
+
+    <button onclick="preset('rapido')">
+      ⚡ Rápido
+    </button>
+  </div>
+
+  <!-- SENSIBILIDADE -->
+  <div class="card">
+    <h2>🎯 Configuração</h2>
+
+    <div class="range-row">
+      <div class="range-title">
+        <span>Geral</span>
+        <span class="value" id="geralValue">90</span>
+      </div>
+      <input id="geral" type="range" min="0" max="100" value="90"
+             oninput="atualizar()">
+    </div>
+
+    <div class="range-row">
+      <div class="range-title">
+        <span>Ponto Vermelho</span>
+        <span class="value" id="redValue">85</span>
+      </div>
+      <input id="red" type="range" min="0" max="100" value="85"
+             oninput="atualizar()">
+    </div>
+
+    <div class="range-row">
+      <div class="range-title">
+        <span>Mira 2x</span>
+        <span class="value" id="mira2Value">75</span>
+      </div>
+      <input id="mira2" type="range" min="0" max="100" value="75"
+             oninput="atualizar()">
+    </div>
+
+    <div class="range-row">
+      <div class="range-title">
+        <span>Mira 4x</span>
+        <span class="value" id="mira4Value">65</span>
+      </div>
+      <input id="mira4" type="range" min="0" max="100" value="65"
+             oninput="atualizar()">
+    </div>
+
+    <button class="success" onclick="salvar()">
+      💾 SALVAR CONFIGURAÇÃO
+    </button>
+
+    <div id="saveStatus" class="status"></div>
+  </div>
+
+  <!-- TREINO -->
+  <div class="card">
+    <h2>🔴 Treino de Mira</h2>
+
+    <div class="result" id="score">0</div>
+
+    <button class="primary" onclick="iniciarTreino()">
+      INICIAR TREINO
+    </button>
+
+    <button onclick="acertar()">
+      🎯 ACERTE O ALVO
+    </button>
+
+    <div id="treinoStatus" class="status">
+      Treino parado
+    </div>
+  </div>
+
+  <div class="footer">
+    Painel visual independente • Não modifica arquivos do jogo
+  </div>
+
+</div>
+
+<script>
+
+function abrirFreeFire() {
+  const status = document.getElementById("status");
+
+  status.textContent = "Tentando abrir o Free Fire...";
+
+  // Deep link usado por alguns dispositivos Android.
+  window.location.href = "freefire://";
+
+  setTimeout(() => {
+    status.textContent =
+      "Se o jogo não abrir, use o ícone do Free Fire normalmente.";
+  }, 1800);
+}
+
+
+// Atualiza valores dos controles
+function atualizar() {
+  document.getElementById("geralValue").textContent =
+    document.getElementById("geral").value;
+
+  document.getElementById("redValue").textContent =
+    document.getElementById("red").value;
+
+  document.getElementById("mira2Value").textContent =
+    document.getElementById("mira2").value;
+
+  document.getElementById("mira4Value").textContent =
+    document.getElementById("mira4").value;
+}
+
+
+// Presets
+function preset(tipo) {
+
+  let valores;
+
+  if (tipo === "equilibrado") {
+    valores = [90, 85, 75, 65];
+  }
+
+  if (tipo === "precisao") {
+    valores = [80, 75, 65, 55];
+  }
+
+  if (tipo === "rapido") {
+    valores = [100, 95, 90, 85];
+  }
+
+  document.getElementById("geral").value = valores[0];
+  document.getElementById("red").value = valores[1];
+  document.getElementById("mira2").value = valores[2];
+  document.getElementById("mira4").value = valores[3];
+
+  atualizar();
+
+  document.getElementById("saveStatus").textContent =
+    "Preset aplicado: " + tipo;
+}
+
+
+// Salvar no navegador
+function salvar() {
+
+  const config = {
+    geral: document.getElementById("geral").value,
+    red: document.getElementById("red").value,
+    mira2: document.getElementById("mira2").value,
+    mira4: document.getElementById("mira4").value
+  };
+
+  localStorage.setItem(
+    "freeFireConfig",
+    JSON.stringify(config)
+  );
+
+  document.getElementById("saveStatus").textContent =
+    "✅ Configuração salva neste dispositivo.";
+}
+
+
+// Carregar configuração
+function carregar() {
+
+  const dados = localStorage.getItem("freeFireConfig");
+
+  if (!dados) return;
+
+  const config = JSON.parse(dados);
+
+  document.getElementById("geral").value = config.geral;
+  document.getElementById("red").value = config.red;
+  document.getElementById("mira2").value = config.mira2;
+  document.getElementById("mira4").value = config.mira4;
+
+  atualizar();
+}
+
+
+// Treino
+let score = 0;
+let treinando = false;
+
+function iniciarTreino() {
+
+  score = 0;
+  treinando = true;
+
+  document.getElementById("score").textContent = score;
+
+  document.getElementById("treinoStatus").textContent =
+    "🔥 Treino iniciado! Toque em ACERTE O ALVO.";
+
+  setTimeout(() => {
+
+    if (treinando) {
+      treinando = false;
+
+      document.getElementById("treinoStatus").textContent =
+        "⏱️ Tempo encerrado! Pontuação: " + score;
+    }
+
+  }, 30000);
+}
+
+
+function acertar() {
+
+  if (!treinando) {
+    document.getElementById("treinoStatus").textContent =
+      "Inicie o treino primeiro.";
+    return;
+  }
+
+  score++;
+
+  document.getElementById("score").textContent = score;
+}
+
+
+// Inicialização
+carregar();
+atualizar();
+
+</script>
+
+</body>
+</html>
